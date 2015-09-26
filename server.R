@@ -7,7 +7,6 @@ shinyServer(function(input, output) {
    output$wikichart <- renderPlot({
       
       input$goButton
-          
       isolate(page<-c(input$article1, input$article2))
         
       plotofwiki <- ggplot() + scale_x_datetime() + xlab("") + ylab("")
@@ -25,6 +24,26 @@ shinyServer(function(input, output) {
       }
         
       plotofwiki
+   })
+
+   output$average1 <- renderText({
+           input$goButton
+           isolate(article1<-input$article1)
+           raw_data1 <- getURL(paste("http://stats.grok.se/json/en/latest", 
+                                    input$numofdays, "/", article1, sep=""))
+           data1 <- fromJSON(raw_data1)
+           average1 <- ave(data1$daily_views)[1]
+           average1
+   })
+
+   output$average2 <- renderText({
+           input$goButton
+           isolate(article2<-input$article2)
+           raw_data2 <- getURL(paste("http://stats.grok.se/json/en/latest", 
+                                    input$numofdays, "/", article2, sep=""))
+           data2 <- fromJSON(raw_data2)
+           average2 <- ave(data2$daily_views)[1]
+           average2
    })
   
 })
